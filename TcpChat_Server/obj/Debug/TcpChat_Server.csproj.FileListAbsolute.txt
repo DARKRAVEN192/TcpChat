@@ -1,0 +1,7 @@
+D:\Progtime2022\TcpChat\TcpChat_Server\bin\Debug\TcpChat_Server.exe.config
+D:\Progtime2022\TcpChat\TcpChat_Server\bin\Debug\TcpChat_Server.exe
+D:\Progtime2022\TcpChat\TcpChat_Server\bin\Debug\TcpChat_Server.pdb
+D:\Progtime2022\TcpChat\TcpChat_Server\obj\Debug\TcpChat_Server.csprojAssemblyReference.cache
+D:\Progtime2022\TcpChat\TcpChat_Server\obj\Debug\TcpChat_Server.csproj.CoreCompileInputs.cache
+D:\Progtime2022\TcpChat\TcpChat_Server\obj\Debug\TcpChat_Server.exe
+D:\Progtime2022\TcpChat\TcpChat_Server\obj\Debug\TcpChat_Server.pdb
