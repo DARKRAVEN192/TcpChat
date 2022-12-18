@@ -27,6 +27,11 @@ namespace TcpChat_Client
             //подключаемся к удаленной точке
             socket_sender.Connect(endRemoutePoint);
 
+            // работа с именем клиента
+            Console.WriteLine("Пожалуйста, введите имя: ");
+            string name = Console.ReadLine();
+            SendMessage(socket_sender, name);
+
             Action<Socket> taskSendMessage = SendMessageForTask;
             IAsyncResult res = taskSendMessage.BeginInvoke(socket_sender, null, null);
 
@@ -44,7 +49,7 @@ namespace TcpChat_Client
             while (true)
             {
                 string message = Console.ReadLine();
-                SendMessage(socket, $"[CLIENT]: {message}");
+                SendMessage(socket, message);
             }
         }
 

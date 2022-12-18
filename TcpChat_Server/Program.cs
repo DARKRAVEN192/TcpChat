@@ -12,6 +12,7 @@ namespace TcpChat_Server
     class Program
     {
         static string messageFromUser="";
+        static List<User> clientSockets = new List<User>();
         static void Main(string[] args)
         {
             Console.Title = "Server";
@@ -27,20 +28,29 @@ namespace TcpChat_Server
             // привязываем сокет к endpoint
             socket.Bind(endPoint);
 
-            socket.Listen(1);  // переволим сокет в режим слушать
+            socket.Listen(2);  // переволим сокет в режим слушать
 
             Console.WriteLine("Ожидаем звонка от клиента...");
 
-            Socket socketClient = socket.Accept();   // ожидаем звонка
+            while (true)
+            {
+                Socket socketClient = socket.Accept();   // ожидаем звонка
+                User user = new User()
+                {
+                    Socket = socketClient,
+                    Name = "test"
+                };
+                clientSockets.Add(user);
 
-            Console.WriteLine("Клиент на связи");
+                Console.WriteLine("Клиент на связи");
 
-            // создаем менеджеров
-            Thread threadReceive = new Thread(ReceiveMessageForManager);
-            Thread threadSend = new Thread(SendMessageForManager);
+                // создаем менеджеров
+                Thread threadReceive = new Thread(ReceiveMessageForManager);
+                Thread threadSend = new Thread(SendMessageForManager);
 
-            threadSend.Start(socketClient);
-            threadReceive.Start(socketClient);
+                threadSend.Start(user);
+                threadReceive.Start(user);
+            }
 
 
             Console.ReadLine();
@@ -56,13 +66,16 @@ namespace TcpChat_Server
 
         public static void ReceiveMessageForManager(object socketObj)
         {
+            User user = (User)socketObj;
+            //получаем доп данные
+            string name = ReceiveMessage(user.Socket);
+            user.Name = name;
+            //получаем сообщения от клиента
             while (true)
-            {
-                Socket socket = (Socket)socketObj;
+            {        
+                messageFromUser = ReceiveMessage(user.Socket);
 
-                messageFromUser = ReceiveMessage(socket);
-
-                Console.WriteLine($"[MANAGER]: {messageFromUser}");
+                Console.WriteLine($"[{name}]: {messageFromUser}");
             }
         }
 
@@ -73,14 +86,27 @@ namespace TcpChat_Server
             socket.Send(bytes_answer);
         }
 
+        public static void SendMessageToAllUsers(string message)
+        {
+            foreach (var user in clientSockets)
+            {
+                SendMessage(user.Socket, message);
+            }
+        }
         public static void SendMessageForManager(object socketObj)
         {
-            Socket socket = (Socket)socketObj;
+            User user = (User)socketObj;
             while (true)
             {
                 string messageFromServer = Console.ReadLine();
-                SendMessage(socket, messageFromServer);
+                SendMessageToAllUsers(user.Name +", "+ messageFromServer);
             }
         }
+    }
+
+    public class User
+    {
+        public string Name { get; set; }
+        public Socket Socket { get; set; }
     }
 }
