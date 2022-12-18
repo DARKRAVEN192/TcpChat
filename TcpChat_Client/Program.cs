@@ -27,25 +27,47 @@ namespace TcpChat_Client
             //подключаемся к удаленной точке
             socket_sender.Connect(endRemoutePoint);
 
-            while (true)
-            {
-                //отправка сообщения от клиента
-                Console.WriteLine("Введите сообщение для отправки на сервер");
-                string message = Console.ReadLine();
-                byte[] bytes = Encoding.Unicode.GetBytes(message);
-                //отправляем послыку на сервер
-                socket_sender.Send(bytes);
-                Console.WriteLine($"Посылка \"{message}\" отправленна");
+            Action<Socket> taskSendMessage = SendMessageForTask;
+            IAsyncResult res = taskSendMessage.BeginInvoke(socket_sender, null, null);
 
-                //получаем ответ от сервера
-                byte[] bytes_answer = new byte[1024];
-                int num_bytes = socket_sender.Receive(bytes_answer);
-                string answer = Encoding.Unicode.GetString(bytes_answer, 0, num_bytes);
-                Console.WriteLine(answer);
-                Console.WriteLine();
-            }
+            Action<Socket> taskReceiveMessage = ReceiveMessageForTask;
+            IAsyncResult recReceive = taskReceiveMessage.BeginInvoke(socket_sender, null, null);
+
+            taskSendMessage.EndInvoke(res);
+            taskReceiveMessage.EndInvoke(recReceive);
 
             Console.ReadLine();
+        }
+
+        public static void SendMessageForTask(Socket socket)
+        {
+            while (true)
+            {
+                string message = Console.ReadLine();
+                SendMessage(socket, $"[CLIENT]: {message}");
+            }
+        }
+
+        public static void ReceiveMessageForTask(Socket socket)
+        {
+            while (true)
+            {
+                string answer = ReceiveMessage(socket);
+                Console.WriteLine(answer);
+            }
+        }
+
+        public static void SendMessage(Socket socket, string message)
+        {
+            byte[] bytes_answer = Encoding.Unicode.GetBytes(message);
+            socket.Send(bytes_answer);
+        }
+
+        public static string ReceiveMessage(Socket socket)
+        {
+            byte[] bytes = new byte[1024];
+            int numBytes = socket.Receive(bytes);
+            return Encoding.Unicode.GetString(bytes, 0, numBytes);
         }
     }
 }

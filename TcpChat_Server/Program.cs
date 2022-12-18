@@ -5,11 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
+using System.Threading;
 
 namespace TcpChat_Server
 {
     class Program
     {
+        static string messageFromUser="";
         static void Main(string[] args)
         {
             Console.Title = "Server";
@@ -33,20 +35,52 @@ namespace TcpChat_Server
 
             Console.WriteLine("Клиент на связи");
 
+            // создаем менеджеров
+            Thread threadReceive = new Thread(ReceiveMessageForManager);
+            Thread threadSend = new Thread(SendMessageForManager);
+
+            threadSend.Start(socketClient);
+            threadReceive.Start(socketClient);
+
+
+            Console.ReadLine();
+        }
+
+        public static string ReceiveMessage(Socket socket)
+        {
+            // получение сообщения
+            byte[] bytes = new byte[1024];
+            int numBytes = socket.Receive(bytes);
+            return Encoding.Unicode.GetString(bytes, 0, numBytes);        
+        }
+
+        public static void ReceiveMessageForManager(object socketObj)
+        {
             while (true)
             {
-                // получение сообщения от клиента
-                byte[] bytes = new byte[1024];
-                int numBytes = socketClient.Receive(bytes);
-                string textFromClient = Encoding.Unicode.GetString(bytes, 0, numBytes);
-                Console.WriteLine(textFromClient);
+                Socket socket = (Socket)socketObj;
 
-                // ответное сообщение от сервера к клиенту
-                string answer = "Server: OK";
-                byte[] bytes_answer = Encoding.Unicode.GetBytes(answer);
-                socketClient.Send(bytes_answer);
-            }        
-            Console.ReadLine();
+                messageFromUser = ReceiveMessage(socket);
+
+                Console.WriteLine($"[MANAGER]: {messageFromUser}");
+            }
+        }
+
+        public static void SendMessage(Socket socket, string message)
+        {
+            // ответное сообщение от сервера к клиенту
+            byte[] bytes_answer = Encoding.Unicode.GetBytes(message);
+            socket.Send(bytes_answer);
+        }
+
+        public static void SendMessageForManager(object socketObj)
+        {
+            Socket socket = (Socket)socketObj;
+            while (true)
+            {
+                string messageFromServer = Console.ReadLine();
+                SendMessage(socket, messageFromServer);
+            }
         }
     }
 }
