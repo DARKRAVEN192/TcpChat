@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
+using System.Xml.Serialization;
+using System.IO;
+
+using Newtonsoft.Json;
 
 namespace TcpChat_Server
 {
@@ -72,11 +76,62 @@ namespace TcpChat_Server
             user.Name = name;
             //получаем сообщения от клиента
             while (true)
-            {        
+            {
                 messageFromUser = ReceiveMessage(user.Socket);
 
                 Console.WriteLine($"[{name}]: {messageFromUser}");
+
+                // раскодировать сообщение от пользователя
+                //ProcessCommandWord(user.Socket, messageFromUser);
+                //ProcessCommandCoding(user.Socket, messageFromUser);
+
+                ProcessCommandJson(user.Socket, messageFromUser);
+
+                #region Receive XML
+                /*
+                byte[] bytes = new byte[1024];
+                int numBytes = user.Socket.Receive(bytes);
+
+                ProcessCommandXML(user.Socket, bytes, numBytes);
+                */
+                #endregion
             }
+        }
+        private static void ProcessCommandJson(Socket socket, string text)
+        {
+            Dumpling dumpling = JsonConvert.DeserializeObject<Dumpling>(text);
+        }
+        private static void ProcessCommandXML(Socket socket, byte[] bytes, int numBytes)
+        {
+            XmlSerializer xmlSerialiser = new XmlSerializer(typeof(Platypus));
+
+            MemoryStream stream = new MemoryStream(bytes, 0, numBytes);
+            stream.Position = 0;
+
+            Platypus platypus = xmlSerialiser.Deserialize(stream) as Platypus;
+        }
+        private static void ProcessCommandWord(Socket socket, string comand)
+        {
+            if (messageFromUser == "color")
+            {
+                Console.WriteLine($"Пользователь прислал команду color");
+
+                SendMessage(socket, "Сервер принял вашу команду!");
+            }
+        }
+        private static void ProcessCommandCoding(Socket socket, string comand)
+        {
+            // health, level, money
+            // 10,4,5
+
+            int health, level, money;
+
+            string[] numsText = comand.Split(',');
+            health = int.Parse(numsText[0]);
+            level = int.Parse(numsText[1]);
+            money = int.Parse(numsText[2]);
+
+            Console.WriteLine($"Health: {health}, Level: {level}, Money: {money}");
         }
 
         public static void SendMessage(Socket socket, string message)

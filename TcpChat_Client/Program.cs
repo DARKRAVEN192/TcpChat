@@ -5,6 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
+using System.Xml.Serialization;
+using System.IO;
+
+using Newtonsoft.Json;
 
 
 namespace TcpChat_Client
@@ -28,7 +32,7 @@ namespace TcpChat_Client
             socket_sender.Connect(endRemoutePoint);
 
             // работа с именем клиента
-            Console.WriteLine("Пожалуйста, введите имя: ");
+            Console.Write("Пожалуйста, введите имя: ");
             string name = Console.ReadLine();
             SendMessage(socket_sender, name);
 
@@ -49,7 +53,43 @@ namespace TcpChat_Client
             while (true)
             {
                 string message = Console.ReadLine();
-                SendMessage(socket, message);
+
+                if (message == "platypus")
+                {
+                    Platypus platypus = new Platypus()
+                    {
+                        Color = "CoolBrown", Size =2         
+                    };
+
+                    XmlSerializer xmlSerialiser = new XmlSerializer(typeof(Platypus));
+
+                    MemoryStream stream = new MemoryStream();
+
+                    xmlSerialiser.Serialize(stream, platypus);
+
+                    stream.Position = 0;
+                    //Platypus platypus2 = xmlSerialiser.Deserialize(stream) as Platypus;
+
+                    byte[] bytes = stream.ToArray();
+                    // отправляем утконоса
+                    socket.Send(bytes);
+                }
+                else if (message == "dumpling")
+                {
+                    Dumpling dumpling = new Dumpling()
+                    {
+                        IsFried = true, Name = "Стрелка", 
+                        Description = "Супер-пупер афигенно смачный и странно зеленоватый"
+                    };
+
+                    string text = JsonConvert.SerializeObject(dumpling);
+                    SendMessage(socket, text);
+                }
+                else
+                {
+                    SendMessage(socket, message);
+                }
+                
             }
         }
 

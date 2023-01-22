@@ -5,3 +5,6 @@ D:\Progtime2022\TcpChat\TcpChat_Server\obj\Debug\TcpChat_Server.csprojAssemblyRe
 D:\Progtime2022\TcpChat\TcpChat_Server\obj\Debug\TcpChat_Server.csproj.CoreCompileInputs.cache
 D:\Progtime2022\TcpChat\TcpChat_Server\obj\Debug\TcpChat_Server.exe
 D:\Progtime2022\TcpChat\TcpChat_Server\obj\Debug\TcpChat_Server.pdb
+D:\Progtime2022\TcpChat\TcpChat_Server\bin\Debug\Newtonsoft.Json.dll
+D:\Progtime2022\TcpChat\TcpChat_Server\bin\Debug\Newtonsoft.Json.xml
+D:\Progtime2022\TcpChat\TcpChat_Server\obj\Debug\TcpChat_Server.csproj.CopyComplete
