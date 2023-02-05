@@ -16,6 +16,16 @@ namespace Tcp_Controler
         Socket socket_sender;
         public Client()
         {
+            //game
+            hero.Weapon = new Weapon();
+            hero.Items = new Item[]
+            {
+                new Item (){Name = "Лапти", Description="Нужны для прогулки" },
+                new Item (){Name = "Монтировка", Description="Хороша против зомбаков" },
+                new Item (){Name = "Йогурт", Description="-10 к стрессу" }
+            };
+
+            //seti
             socket_sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             IPAddress address = IPAddress.Parse("127.0.0.1");
@@ -27,6 +37,24 @@ namespace Tcp_Controler
         public void MoveRight()
         {
             hero.X += 50;
+
+            Utility.JsonSerialiseAndSend(hero, socket_sender);
+        }
+
+        public void MoveLeft()
+        {
+            hero.X -= 50;
+            Utility.JsonSerialiseAndSend(hero, socket_sender);
+        }
+
+        public void MoveUp()
+        {
+            hero.Y -= 50;
+            Utility.JsonSerialiseAndSend(hero, socket_sender);
+        }
+        public void MoveDown()
+        {
+            hero.Y += 50;
 
             Utility.JsonSerialiseAndSend(hero, socket_sender);
         }
