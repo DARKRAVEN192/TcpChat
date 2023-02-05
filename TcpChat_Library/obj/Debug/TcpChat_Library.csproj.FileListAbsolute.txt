@@ -1,0 +1,9 @@
+D:\Progtime2022\TcpChat\TcpChat_Library\bin\Debug\TcpChat_Library.dll
+D:\Progtime2022\TcpChat\TcpChat_Library\bin\Debug\TcpChat_Library.pdb
+D:\Progtime2022\TcpChat\TcpChat_Library\obj\Debug\TcpChat_Library.csprojAssemblyReference.cache
+D:\Progtime2022\TcpChat\TcpChat_Library\obj\Debug\TcpChat_Library.csproj.CoreCompileInputs.cache
+D:\Progtime2022\TcpChat\TcpChat_Library\obj\Debug\TcpChat_Library.dll
+D:\Progtime2022\TcpChat\TcpChat_Library\obj\Debug\TcpChat_Library.pdb
+D:\Progtime2022\TcpChat\TcpChat_Library\bin\Debug\Newtonsoft.Json.dll
+D:\Progtime2022\TcpChat\TcpChat_Library\bin\Debug\Newtonsoft.Json.xml
+D:\Progtime2022\TcpChat\TcpChat_Library\obj\Debug\TcpChat_Library.csproj.CopyComplete

@@ -10,6 +10,8 @@ using System.Xml.Serialization;
 using System.IO;
 
 using Newtonsoft.Json;
+using TcpChat_Library;
+using TcpChat_Library.Models;
 
 namespace TcpChat_Server
 {
@@ -60,24 +62,17 @@ namespace TcpChat_Server
             Console.ReadLine();
         }
 
-        public static string ReceiveMessage(Socket socket)
-        {
-            // получение сообщения
-            byte[] bytes = new byte[1024];
-            int numBytes = socket.Receive(bytes);
-            return Encoding.Unicode.GetString(bytes, 0, numBytes);        
-        }
 
         public static void ReceiveMessageForManager(object socketObj)
         {
             User user = (User)socketObj;
             //получаем доп данные
-            string name = ReceiveMessage(user.Socket);
+            string name = Utility.ReceiveMessage(user.Socket);
             user.Name = name;
             //получаем сообщения от клиента
             while (true)
             {
-                messageFromUser = ReceiveMessage(user.Socket);
+                messageFromUser = Utility.ReceiveMessage(user.Socket);
 
                 Console.WriteLine($"[{name}]: {messageFromUser}");
 
@@ -85,7 +80,7 @@ namespace TcpChat_Server
                 //ProcessCommandWord(user.Socket, messageFromUser);
                 //ProcessCommandCoding(user.Socket, messageFromUser);
 
-                ProcessCommandJson(user.Socket, messageFromUser);
+                Utility.JsonDeserialise(messageFromUser);
 
                 #region Receive XML
                 /*
@@ -96,10 +91,6 @@ namespace TcpChat_Server
                 */
                 #endregion
             }
-        }
-        private static void ProcessCommandJson(Socket socket, string text)
-        {
-            Dumpling dumpling = JsonConvert.DeserializeObject<Dumpling>(text);
         }
         private static void ProcessCommandXML(Socket socket, byte[] bytes, int numBytes)
         {
@@ -116,7 +107,7 @@ namespace TcpChat_Server
             {
                 Console.WriteLine($"Пользователь прислал команду color");
 
-                SendMessage(socket, "Сервер принял вашу команду!");
+                Utility.SendMessage(socket, "Сервер принял вашу команду!");
             }
         }
         private static void ProcessCommandCoding(Socket socket, string comand)
@@ -134,18 +125,11 @@ namespace TcpChat_Server
             Console.WriteLine($"Health: {health}, Level: {level}, Money: {money}");
         }
 
-        public static void SendMessage(Socket socket, string message)
-        {
-            // ответное сообщение от сервера к клиенту
-            byte[] bytes_answer = Encoding.Unicode.GetBytes(message);
-            socket.Send(bytes_answer);
-        }
-
         public static void SendMessageToAllUsers(string message)
         {
             foreach (var user in clientSockets)
             {
-                SendMessage(user.Socket, message);
+                Utility.SendMessage(user.Socket, message);
             }
         }
         public static void SendMessageForManager(object socketObj)

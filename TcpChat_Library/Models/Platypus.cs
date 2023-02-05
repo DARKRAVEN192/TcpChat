@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TcpChat_Client
+namespace TcpChat_Library.Models
 {
     public class Platypus
     {

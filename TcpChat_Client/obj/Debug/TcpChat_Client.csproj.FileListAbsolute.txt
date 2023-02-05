@@ -8,3 +8,5 @@ D:\Progtime2022\TcpChat\TcpChat_Client\obj\Debug\TcpChat_Client.pdb
 D:\Progtime2022\TcpChat\TcpChat_Client\bin\Debug\Newtonsoft.Json.dll
 D:\Progtime2022\TcpChat\TcpChat_Client\bin\Debug\Newtonsoft.Json.xml
 D:\Progtime2022\TcpChat\TcpChat_Client\obj\Debug\TcpChat_Client.csproj.CopyComplete
+D:\Progtime2022\TcpChat\TcpChat_Client\bin\Debug\TcpChat_Library.dll
+D:\Progtime2022\TcpChat\TcpChat_Client\bin\Debug\TcpChat_Library.pdb
